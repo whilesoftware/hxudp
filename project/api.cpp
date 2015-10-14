@@ -506,6 +506,13 @@ public:
 		return true;
 	}
 
+	int GetRemotePort() {
+		if (m_hSocket == INVALID_SOCKET) return(false);
+		if ( canGetRemoteAddress ==	false) return (false);
+
+		return ntohs(saClient.sin_port);
+	}
+
 	bool SetReceiveBufferSize(int sizeInByte) {
 		if (m_hSocket == INVALID_SOCKET) return(false);
 
@@ -817,12 +824,22 @@ DEFINE_PRIM(_UdpSocket_GetTimeoutReceive, 1);
 value _UdpSocket_GetRemoteAddr(value a) {
 	UdpSocket* s = (UdpSocket*) val_data(a);
 	char* address = new char[INET_ADDRSTRLEN];
-	s->GetRemoteAddr(address);
+	if (! s->GetRemoteAddr(address)) {
+		value tv = alloc_string("unknown:0");
+		delete[] address;
+		return tv;
+	}
 	value v = alloc_string(address);
 	delete[] address;
 	return v;
 }
 DEFINE_PRIM(_UdpSocket_GetRemoteAddr, 1);
+
+value _UdpSocket_GetRemotePort(value a) {
+	UdpSocket* s = (UdpSocket*) val_data(a);
+	return alloc_int(s->GetRemotePort());
+}
+DEFINE_PRIM(_UdpSocket_GetRemotePort, 1);
 
 value _UdpSocket_SetReceiveBufferSize(value a, value b) {
 	UdpSocket* s = (UdpSocket*) val_data(a);

@@ -150,6 +150,11 @@ class UdpSocket {
 		return _UdpSocket_GetRemoteAddr(handle);
 	}
 	static var _UdpSocket_GetRemoteAddr = Lib.load("hxudp", "_UdpSocket_GetRemoteAddr", 1);
+
+	public function getRemotePort():Int {
+		return _UdpSocket_GetRemotePort(handle);
+	}
+	static var _UdpSocket_GetRemotePort = Lib.load("hxudp", "_UdpSocket_GetRemotePort", 1);
 	
 	
 	public function setReceiveBufferSize(sizeInByte:Int):Bool {
